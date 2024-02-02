@@ -1,65 +1,77 @@
-// @import '../../../styles/colors';
+@use 'src/styles/helpers' as *;
 
-@mixin typography($fontSize, $fontWeight, $lineHeight) {
-  font-size: $fontSize;
-  font-weight: $fontWeight;
-  line-height: $lineHeight;
+@mixin typography($size: null, $weight: null, $line-height: null) {
+  margin: 0;
+
+  @if $size {
+    font-size: var(--font-size-#{$size});
+  }
+
+  @if $weight {
+    font-weight: var(--font-weight-#{$weight});
+  }
+
+  @if $line-height {
+    line-height: var(--line-height-#{$line-height});
+  }
 }
 
 .large {
-  @include typography(var(--font-size-xxl), var(--font-weight-bold), var(--line-height-l));
+  @include typography(xxl, bold);
+
+  line-height: 1.38;
 }
 
 .h1 {
-  @include typography(var(--font-size-xl), var(--font-weight-bold), var(--line-height-l));
+  @include typography($size: xxl, $weight: bold, $line-height: xl);
 }
 
 .h2 {
-  @include typography(var(--font-size-l), var(--font-weight-bold), var(--line-height-m));
+  @include typography($size: l, $weight: bold, $line-height: s);
 }
 
 .h3 {
-  @include typography(var(--font-size-m), var(--font-weight-bold), var(--line-height-m));
+  @include typography($weight: bold);
 }
 
 .body1 {
-  @include typography(var(--font-size-m), var(--font-weight-regular), var(--line-height-m));
-}
-
-.body2 {
-  @include typography(var(--font-size-s), var(--font-weight-regular), var(--line-height-m));
+  @include typography;
 }
 
 .subtitle1 {
-  @include typography(var(--font-size-m), var(--font-weight-bold), var(--line-height-m));
+  @include typography($weight: bold);
+}
+
+.body2 {
+  @include typography($size: s, $line-height: l);
 }
 
 .subtitle2 {
-  @include typography(var(--font-size-s), var(--font-weight-bold), var(--line-height-m));
+  @include typography($size: s, $weight: bold, $line-height: l);
 }
 
 .caption {
-  @include typography(var(--font-size-xs), var(--font-weight-regular), var(--line-height-s));
+  @include typography($size: xs, $line-height: s);
 }
 
 .overline {
-  @include typography(var(--font-size-xs), var(--font-weight-bold), var(--line-height-s));
+  @include typography($size: xs, $weight: bold, $line-height: s);
 }
 
-.link1,
-.link1:visited {
-  @include typography(var(--font-size-s), var(--font-weight-regular), var(--line-height-m));
-
+%link-shared {
   cursor: pointer;
-  color: var(--color-accent-500);
+  color: var(--color-info-500);
   text-decoration: underline;
 }
 
-.link2,
-.link2:visited {
-  @include typography(var(--font-size-xs), var(--font-weight-regular), var(--line-height-s));
+.link1 {
+  @extend %link-shared;
 
-  cursor: pointer;
-  color: var(--color-accent-500);
-  text-decoration: underline;
+  @include typography($size: s, $line-height: l);
+}
+
+.link2 {
+  @extend %link-shared;
+
+  @include typography($size: xs, $line-height: s);
 }

@@ -1,13 +1,15 @@
-import { ArrowMiniLeftIcon, ArrowMiniRightIcon } from '@/assets'
 import { usePagination } from '@/components/ui/pagination/usePagination'
 import { Select, SelectProps } from '@/components/ui/select'
 import { Typography } from '@/components/ui/typography'
+import { ArrowMiniLeftIcon } from '@/icons/icon-components/arrow-mini-left-icon'
+import { ArrowMiniRightIcon } from '@/icons/icon-components/arrow-mini-right-icon'
 import { clsx } from 'clsx'
 
 import s from './pagination.module.scss'
 
 export type PaginationProps = {
   currentPage: number
+  itemsPerPage: (selectValue: string) => void
   onPageChange: (pageNumber: number) => void
   pageSize: number
   siblingsCount?: number
@@ -16,6 +18,7 @@ export type PaginationProps = {
 
 export const Pagination = ({
   currentPage,
+  itemsPerPage,
   onPageChange,
   pageSize,
   siblingsCount = 1,
@@ -35,8 +38,8 @@ export const Pagination = ({
     select: clsx(s.select),
     selectContainer: clsx(s.selectContainer),
   }
-  const totalPageCount = Math.ceil(totalCount / pageSize)
 
+  const totalPageCount = Math.ceil(totalCount / pageSize)
   const pageNumbers = usePagination({ currentPage, siblingsCount, totalPageCount })
 
   const setNextPage = () => {
@@ -49,6 +52,9 @@ export const Pagination = ({
     if (currentPage !== 1) {
       onPageChange(currentPage - 1)
     }
+  }
+  const onValueChange = (e: string) => {
+    itemsPerPage(e)
   }
 
   return (
@@ -84,7 +90,12 @@ export const Pagination = ({
         <Typography as={'span'} variant={'body2'}>
           Показать
         </Typography>
-        <Select className={classNames.select} variant={'pagination'} {...rest} />
+        <Select
+          className={classNames.select}
+          onValueChange={onValueChange}
+          variant={'pagination'}
+          {...rest}
+        />
         <Typography as={'span'} variant={'body2'}>
           на странице
         </Typography>

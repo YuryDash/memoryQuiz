@@ -18,13 +18,15 @@ export const usePagination = ({
   return useMemo(() => {
     if (siblingsCount + 5 >= totalPageCount) {
       return createRange(1, totalPageCount)
-    }
+    } //siblingsCount - this is the number of pages that should be displayed to the left and right of the current card-page.
 
     const leftSiblingIndex = Math.max(currentPage - siblingsCount, 1)
-    const rigthSiblingIndex = Math.min(currentPage + siblingsCount, totalPageCount)
+    const rightSiblingIndex = Math.min(currentPage + siblingsCount, totalPageCount)
+    // these are the card-page numbers to the left and right of the one you are currently on.
+    // if current 5 (leftSiblingIndex===4) (rightSiblingIndex==6)
 
     const shouldShowLeftDots = leftSiblingIndex > 2
-    const shouldShowRightDots = rigthSiblingIndex < totalPageCount - 2
+    const shouldShowRightDots = rightSiblingIndex < totalPageCount - 2
 
     if (!shouldShowLeftDots && shouldShowRightDots) {
       const leftItemCount = 3 + 2 * siblingsCount
@@ -32,6 +34,11 @@ export const usePagination = ({
 
       return [...leftRange, DOTS, totalPageCount]
     }
+    // Пример: Если у нас totalPageCount = 10 (всего страниц 10), currentPage = 3 (текущая страница 3), и siblingsCount = 1 (по одной странице с каждой стороны), то получится так:
+    //
+    //   leftItemCount будет 3 + 2 * 1 = 5.
+    // leftRange будет [1, 2, 3, 4, 5].
+    //   Итоговый массив будет [1, 2, 3, 4, 5, '...', 10].
 
     if (shouldShowLeftDots && !shouldShowRightDots) {
       const rightItemCount = 3 + 2 * siblingsCount
@@ -41,7 +48,7 @@ export const usePagination = ({
     }
 
     if (shouldShowLeftDots && shouldShowRightDots) {
-      const middleRange = createRange(leftSiblingIndex, rigthSiblingIndex)
+      const middleRange = createRange(leftSiblingIndex, rightSiblingIndex)
 
       return [1, DOTS, ...middleRange, DOTS, totalPageCount]
     }

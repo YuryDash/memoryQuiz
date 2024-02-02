@@ -4,8 +4,10 @@ button {
 }
 
 .list {
+  display: flex;
+  white-space: nowrap;
+
   [data-state='active'] {
-    cursor: auto;
     background-color: var(--color-accent-500);
 
     &:hover {

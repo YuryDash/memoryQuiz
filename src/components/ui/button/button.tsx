@@ -1,24 +1,53 @@
-import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  ElementType,
+  ReactElement,
+  ReactNode,
+  Ref,
+  forwardRef,
+} from 'react'
 
-import { clsx } from 'clsx'
+import { Typography } from '@/components/ui/typography'
+import getClassNames, { ClassesObj } from '@/helpers/get-class-names'
 
 import s from './button.module.scss'
 
-export type ButtonProps<T extends ElementType = 'button'> = {
+export type ButtonVariant = 'link' | 'primary' | 'secondary' | 'tertiary'
+type ButtonSlot = 'label' | 'root'
+export type ButtonClasses = ClassesObj<ButtonSlot, 'fullWidth' | ButtonVariant>
+
+type OwnProps<T extends ElementType> = {
   as?: T
   children?: ReactNode
-  className?: string
+  classes?: ButtonClasses
   fullWidth?: boolean
-  variant?: 'link' | 'primary' | 'secondary' | 'tertiary'
-} & ComponentPropsWithoutRef<T>
-
-export const Button = <T extends ElementType = 'button'>(
-  props: ButtonProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof ButtonProps<T>>
-) => {
-  const { as: Component = 'button', className, fullWidth, variant = 'primary', ...rest } = props
-  const classNames = {
-    all: clsx(s[variant], className, fullWidth && s.fullWidth),
-  }
-
-  return <Component className={classNames.all} {...rest} />
+  variant?: ButtonVariant
 }
+
+export type ButtonProps<T extends ElementType> = OwnProps<T> &
+  Omit<ComponentPropsWithoutRef<T>, 'className' | keyof OwnProps<T>>
+
+const ButtonRender = <T extends ElementType = 'button'>(
+  { as, children, classes, fullWidth, variant = 'primary', ...props }: ButtonProps<T>,
+  ref: Ref<ElementRef<T>>
+) => {
+  const Component = as ?? ('button' as string)
+  const cls = getClassNames(['root', 'label'], { fullWidth, [variant]: variant })(s, classes)
+
+  return (
+    <Component className={cls.root} ref={ref} {...props}>
+      <Typography
+        as={'span'}
+        className={cls.label}
+        variant={variant === 'link' ? 'subtitle1' : 'subtitle2'}
+      >
+        {children}
+      </Typography>
+    </Component>
+  )
+}
+
+export const Button = forwardRef(ButtonRender) as <T extends ElementType = 'button'>(
+  props: ButtonProps<T> & { ref?: Ref<ElementRef<T>> }
+) => ReactElement

@@ -1,33 +1,14 @@
-import { LogOutIcon } from '@/assets'
-import { Avatar } from '@/components/ui/avatar'
-import { Dropdown } from '@/components/ui/dropdown'
-import { DropdownWithAvatar } from '@/components/ui/dropdown/dropdownAvatar'
-import { DropdownItem, DropdownItemWithIcon } from '@/components/ui/dropdown/dropdownItem'
+import { Provider } from 'react-redux'
+import { ToastContainer } from 'react-toastify'
 
-export function App() {
+import { Router } from '@/routings'
+import { store } from '@/services/store'
+
+export const App = () => {
   return (
-    <>
-      <Dropdown
-        align={'end'}
-        trigger={
-          <Avatar
-            image={
-              'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80'
-            }
-          />
-        }
-      >
-        <DropdownItem>
-          <DropdownWithAvatar
-            avatar={
-              'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80'
-            }
-            mail={'IvanMain@gmail.com'}
-            name={'Ivan'}
-          />
-        </DropdownItem>
-        <DropdownItemWithIcon icon={<LogOutIcon />} label={'Sign Out'} />
-      </Dropdown>
-    </>
+    <Provider store={store}>
+      <Router />
+      <ToastContainer autoClose={3000} position={'bottom-left'} theme={'dark'} />
+    </Provider>
   )
 }
